@@ -39,6 +39,7 @@ INSTALLED_APPS = [
 
     # apps
     'accounts',
+    'posts',
 
     # libs
     'rest_framework',

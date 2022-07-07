@@ -45,5 +45,4 @@ class JWTAuthentication(authentication.BaseAuthentication):
         if not user.is_active:
             msg = 'user is not active'
             raise exceptions.AuthenticationFailed(msg)
-
         return (user, token)
