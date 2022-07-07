@@ -10,6 +10,10 @@ class Post(models.Model):
     class Meta:
         db_table = 'posts'
 
+    @property
+    def likes(self):
+        return self.post_like.count()
+
 
 class PostLike(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='post_like')
