@@ -1,12 +1,13 @@
 import jwt
 from datetime import datetime, timedelta
+
 from django.conf import settings
-from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
     PermissionsMixin
 )
+from django.db import models
 
 
 class UserManager(BaseUserManager):
@@ -42,6 +43,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     full_name = models.CharField(max_length=255, null=True, blank=True)
+    last_request = models.DateTimeField(null=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
     objects = UserManager()
