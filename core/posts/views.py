@@ -1,3 +1,5 @@
+from django.db.models import Count
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -34,3 +36,15 @@ class PostLikesAPIView(APIView):
         except PostLike.DoesNotExist:
             PostLike.objects.create(post=post, user=request.user)
         return Response({'like': post.likes}, status=200)
+
+
+class PostLikeAnalyticsAPIView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        date_from, date_to = request.GET.get('date_from'), request.GET.get('date_to')
+        if date_from and date_to:
+            postlikes = PostLike.objects.filter(created_at__range=(date_from, date_to)).extra(
+                {"day": "date_trunc('day', created_at)"}
+            ).values("day").order_by().annotate(count=Count("id"))
+            return JsonResponse(list(postlikes), safe=False, status=200)
+        return JsonResponse({'error': 'please, provide date range'}, status=400)
